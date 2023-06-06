@@ -1,174 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le juste prix 2023 fait par JB</title>
-    <script src="./js/script.js"></script>
-    <link rel="stylesheet" href="animation.css">
-  </head>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Le juste prix 2023 fait par JB</title>
+        <script src="./js/script.js"></script>
+        <link rel="stylesheet" href="animation.css">
+    </head>
+    <style>
 
-  <style>
-
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0; 
-  }
-
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 100px;
-    text-align: center;
-    background-color:rgba(27, 137, 51, 0.607);
-  
-  }
-
-  .message {
-    margin-bottom: 10px;
-  }
-
-  input {
-    width: 60px;
-    padding: 10px;
-  }
-
-  button {
-    padding: 20px 20px;
-    margin-top: 10px;
-    font-size: 16px;
-  }
-  </style>
-
-  <body>
-
-    <header>
-
-      <img
-          src="https://th.bing.com/th/id/R.33bf622c9fc94fe334147574233cc407?rik=vOZbdLmLUBsn2A&riu=http%3a%2f%2fi.skyrock.net%2f6959%2f89546959%2fpics%2f3224159605_1_2_mVvkE6Sz.png&ehk=HvvehleDxIs0TApqe5V9DdcFmUIdYEiyi51IBicvwfE%3d&risl=&pid=ImgRaw&r=0"
-          alt="Logo du juste prix">
-    </header>
-
-    <div class="container">
-      <h1>Jeu du Juste Prix 2023</h1>
-      <div class="message" id="message"></div>
-      <input type="number" id="guessInput" min="1" max="100" autofocus />
-      <button id="guessButton">Valider</button>
-    </div>
-
-    <script>
-    // Liste des lots à gagner
-    var prizes = [
-      "500.000€ de préférence en liquide",
-      "Une Girafe",
-      "PC portable d'une valeur de 10.000€ avec une bonne connexion WIFI",
-      "Voiture thermique sans moteur juste les pédales",
-      "Babouche de couleur rose usée du pied gauche",
-      "Babouche de couleur kaki usée du pied droit",
-      "Un chien qui hoche la tête sur la plage arrière de la voiture, au moins il est toujours d'accord avec moi, pas comme ma femme",
-      "Un mug avec la photo de Bécassine",
-      "La photo dédicée de Paul Préboist"
-    ];
-
-    // Variables du jeu
-    var randomNumber;
-    var attemptsLeft;
-    var gameOver = false;
-
-    // Éléments du DOM
-    var messageElement = document.getElementById('message');
-    var guessInput = document.getElementById('guessInput');
-    var guessButton = document.getElementById('guessButton');
-
-    // Génère un nombre aléatoire entre 1 et 100
-    function generateRandomNumber() {
-      return Math.floor(Math.random() * 100) + 1;
-    }
-
-    // Initialise le jeu
-    function initializeGame() {
-      randomNumber = generateRandomNumber();
-      attemptsLeft = 7;
-      gameOver = false;
-      messageElement.textContent = '';
-      guessInput.value = '';
-      guessInput.disabled = false;
-      guessButton.disabled = false;
-      guessInput.focus();
-    }
-
-    // Vérifie la proposition de l'utilisateur
-    function checkGuess() {
-      var userGuess = parseInt(guessInput.value);
-
-      // Vérifie si l'entrée est valide
-      if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
-        messageElement.textContent = 'Veuillez entrer un nombre compris entre 1 et 100.';
-        return;
-      }
-
-      // Réduit le nombre de tentatives restantes
-      attemptsLeft--;
-
-      // Vérifie si l'utilisateur a trouvé le nombre cible
-      if (userGuess === randomNumber) {
-        gameOver = true;
-        messageElement.textContent = 'Félicitations ! Vous avez trouvé le juste prix et vous remportez le cadeau suivant: ' + getRandomPrize();
-      } else if (attemptsLeft === 0) {
-        gameOver = true;
-        messageElement.textContent = 'Dommage ! Vous avez épuisé toutes vos tentatives. Le juste prix était de : ' + randomNumber;
-      } else if (userGuess < randomNumber) {
-        messageElement.textContent = 'Le nombre cible est PLUS GRAND. Tentatives restantes est de : ' + attemptsLeft;
-      } else {
-        messageElement.textContent = 'Le nombre cible est PLUS PETIT. Tentatives restantes est de : ' + attemptsLeft;
-      }
-
-      // Réinitialise l'entrée de l'utilisateur
-      guessInput.value = '';
-
-      // Désactive les éléments du jeu si c'est terminé
-      if (gameOver) {
-        guessInput.disabled = true;
-        guessButton.disabled = true;
-        restartGame();
-    }
-    }
-
-    // Sélectionne un lot aléatoire parmi la liste des lots
-    function getRandomPrize() {
-      var randomIndex = Math.floor(Math.random() * prizes.length);
-      return prizes[randomIndex];
-    }
-
-    // Attache l'événement de clic au bouton
-    guessButton.addEventListener('click', checkGuess);
-
-    // Attache l'événement de pression de la touche Entrée à l'entrée utilisateur
-    guessInput.addEventListener('keyup', function(event) {
-      if (event.key === 'Enter') {
-        checkGuess();
-      }
-    });
-
-    // Initialise le jeu au chargement de la page
-    window.addEventListener('load', initializeGame);
-
-    // Redémarre le jeu lorsqu'on appuie sur le bouton de confirmation
-    function restartGame() {
-      var confirmed = confirm('Voulez-vous rejouer ?');
-      if (confirmed) {
-        initializeGame();
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0; 
+          background-color: burlywood;
+        }
+      
+        .container {
+          max-width: 500px;
+          margin: 0 auto;
+          padding: 10px;
+          text-align: center;
+          background-color:rgba(27, 137, 51, 0.607);
         
-      }
-    }
+        }
+      
+        
+        </style>
+    <body>
+
+        <header>
+            
+
+
+            <div style="text-align: center;">
+            <img
+                src="https://th.bing.com/th/id/R.33bf622c9fc94fe334147574233cc407?rik=vOZbdLmLUBsn2A&riu=http%3a%2f%2fi.skyrock.net%2f6959%2f89546959%2fpics%2f3224159605_1_2_mVvkE6Sz.png&ehk=HvvehleDxIs0TApqe5V9DdcFmUIdYEiyi51IBicvwfE%3d&risl=&pid=ImgRaw&r=0"
+                alt="Logo du juste prix">
+            </div>
+            
+        </header>
+
+        
+
+        <div id="messages"></div>
+        <input type="text" id="guessInput">
+        <button id="guessButton">Valider</button>
+
+        <script>
+        // Liste des lots à gagner
+        var lots = [
+            "500.000€ de préférence en liquide",
+            "Une Girafe",
+            "PC portable d'une valeur de 10.000€ avec une bonne connexion WIFI",
+            "Voiture thermique sans moteur juste les pédales",
+            "Babouche de couleur rose usée du pied gauche",
+            "Babouche de couleur kaki usée du pied droit",
+            "Un chien qui hoche la tête sur la plage arrière de la voiture, au moins il est toujours d'accord avec moi, pas comme ma femme",
+            "Un mug avec la photo de Bécassine",
+            "La photo dédicée de Paul Préboist"
+        ];
+
+        var secretNumber; // Nombre cible
+        var guessCount; // Compteur d'essais
+        var isGameEnded; // Variable pour vérifier si le jeu est terminé
+
+        function startGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            guessCount = 0;
+            isGameEnded = false;
+
+            showMessage("Le jeu du Juste Prix commence à vous de jouer. Bonne chance ! Devinez le nombre entre 1 et 100.");
+            
+            // Activer le bouton et l'input
+            document.getElementById("guessButton").disabled = false;
+            document.getElementById("guessInput").disabled = false;
+
+            // Vider l'input et le focus dessus
+            document.getElementById("guessInput").value = "";
+            document.getElementById("guessInput").focus();
+        }
+
+        function showMessage(message) {
+            document.getElementById("messages").innerHTML = message;
+        }
+
+        function validateGuess() {
+            if (isGameEnded) {
+                return;   // Si le jeu est terminé, ne rien faire
+            }
+
+            var guessInput = document.getElementById("guessInput");
+            var guess = parseInt(guessInput.value);
+
+            // Vérifier si l'entrée est un nombre entre 1 et 100
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                showMessage("Veuillez entrer un nombre valide entre 1 et 100.");
+                guessInput.value = "";
+                guessInput.focus();
+                return;
+            }
+
+            guessCount++;
+
+            if (guess === secretNumber) {
+                endGame(true);
+            } else if (guessCount === 7) {
+                endGame(false);
+            } else {
+                var message = guess < secretNumber ? "Le nombre est plus grand !" : "Le nombre est plus petit !";
+                showMessage(message + " Essai #" + guessCount);
+                guessInput.value = "";
+                guessInput.focus();
+            }
+        }
+
+        function endGame(isWon) {
+            isGameEnded = true;
+
+            var message = isWon ? "Bravo ! Vous avez deviné le nombre en " + guessCount + " essais !" : "Désolé vous avez perdu. Le nombre était " + secretNumber + ".";
+            showMessage(message);
+
+            // Désactiver le bouton et l'input
+            document.getElementById("guessButton").disabled = true;
+            document.getElementById("guessInput").disabled = true;
+
+            // Afficher le lot gagné
+            if (isWon) {
+                var randomLot = lots[Math.floor(Math.random() * lots.length)];
+                showMessage("Vous avez gagné : " + randomLot);
+            }
+
+            // Créer le bouton de rechargement de la page
+            var restartButton = document.createElement("button");
+            restartButton.textContent = "Recommencer";
+            restartButton.onclick = function() {
+                location.reload();
+            };
+
+            // Ajouter le bouton de rechargement après les messages
+            document.getElementById("messages").appendChild(restartButton);
+        }
+
+        // Ajouter l'événement de clic sur le bouton
+        document.getElementById("guessButton").onclick = validateGuess;
+
+        // Ajouter l'événement pour valider avec la touche "entrée"
+        document.getElementById("guessInput").addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                validateGuess();
+            }
+        });
+
+        // Démarrer le jeu au chargement de la page
+        startGame();
+    </script>
+
+        <div class="container">
+            <h1>Merci pour votre participation...</h1>
+            <h2>A bientôt...</h2>
+        </body>
+    </html>
 
     
-  </script>
-
-    <div class="container">
-      <h2>Merci pour votre participation...</h2>
-      <h1>A bientôt...</h1>
-
-    </body>
-  </html>
